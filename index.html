@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>6コマ画像ホバー表示＋音声</title>
+    <style>
+        #image-container {
+            position: relative;
+            width: 375px;
+        }
+
+        #comic {
+            width: 100%;
+            display: block;
+        }
+
+        .panel {
+            position: absolute;
+            width: 50%;
+            height: 33.333%;
+            box-sizing: border-box;
+        }
+
+        .panel-text {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            color: #333;
+            text-align: center;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="image-container">
+        <img id="comic" src="english01.jpg" alt="english">
+
+        <!-- 6つのコマ -->
+        <!-- row 0 -->
+        <div class="panel" style="top:0%; left:0%;">
+            <div class="panel-text"></div>
+        </div>
+        <div class="panel" style="top:0%; left:50%;">
+            <div class="panel-text"></div>
+        </div>
+        <!-- row 1 -->
+        <div class="panel" style="top:33.333%; left:0%;">
+            <div class="panel-text"></div>
+        </div>
+        <div class="panel" style="top:33.333%; left:50%;">
+            <div class="panel-text"></div>
+        </div>
+        <!-- row 2 -->
+        <div class="panel" style="top:66.666%; left:0%;">
+            <div class="panel-text"></div>
+        </div>
+        <div class="panel" style="top:66.666%; left:50%;">
+            <div class="panel-text"></div>
+        </div>
+    </div>
+
+    <script>
+        const englishtext = [
+            "This Crispy Part is delicious.",
+            "It's fun to draw.",
+            "I'm never giving in.",
+            "I'm not happy...",
+            "Hold on!!",
+            "I'm scared of water."
+        ];
+
+        const originalTexts = [
+            "このサクサク、おいしい･･･",
+            "楽し･･･絵かくの",
+            "絶対･･･負けない",
+            "喜びがない～",
+            "待ってて!!",
+            "水怖いなー"
+        ];
+
+        const panels = document.querySelectorAll('.panel');
+
+        panels.forEach((panel, index) => {
+            const text = panel.querySelector('.panel-text');
+
+            // 最初に日本語を表示
+            text.textContent = originalTexts[index];
+
+            panel.addEventListener('mouseenter', () => {
+                // テキストを英語に変更
+                text.textContent = englishtext[index];
+
+                // 音声再生
+                speak(englishtext[index]);
+            });
+
+            panel.addEventListener('mouseleave', () => {
+                // 日本語に戻す
+                text.textContent = originalTexts[index];
+
+                // 音声停止
+                window.speechSynthesis.cancel();
+            });
+        });
+
+        // 音声再生関数
+        function speak(message) {
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.lang = 'en-US';  // 英語の発音
+            utterance.rate = 0.8;      // 少し遅めのスピードに設定
+            window.speechSynthesis.cancel(); // すでに話している音声があれば止める
+            window.speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+
+</html>
