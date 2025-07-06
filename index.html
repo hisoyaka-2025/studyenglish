@@ -3,21 +3,20 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ★追加 -->
     <title>6コマ画像ホバー表示＋音声</title>
     <style>
         #image-container {
             position: relative;
             width: 100%;
-            /* ★ここを100%に変更 */
             max-width: 600px;
-            /* 任意。最大サイズを制限したい場合 */
             margin: 0 auto;
-            /* 任意。中央に寄せたい場合 */
         }
 
         #comic {
             width: 100%;
             display: block;
+            height: auto;
         }
 
         .panel {
@@ -32,10 +31,22 @@
             bottom: 0;
             width: 100%;
             background: rgba(255, 255, 255, 0.8);
-            font-size: 12px;
+            font-size: 3vw;
+            /* ★最適化された文字サイズ */
             color: #333;
             text-align: center;
             display: block;
+            padding: 2px 0;
+        }
+
+        .panel-text {
+            font-size: 3.5vw;
+        }
+
+        @media (min-width: 600px) {
+            .panel-text {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -44,22 +55,18 @@
     <div id="image-container">
         <img id="comic" src="english01.jpg" alt="english">
 
-        <!-- 6つのコマ -->
-        <!-- row 0 -->
         <div class="panel" style="top:0%; left:0%;">
             <div class="panel-text"></div>
         </div>
         <div class="panel" style="top:0%; left:50%;">
             <div class="panel-text"></div>
         </div>
-        <!-- row 1 -->
         <div class="panel" style="top:33.333%; left:0%;">
             <div class="panel-text"></div>
         </div>
         <div class="panel" style="top:33.333%; left:50%;">
             <div class="panel-text"></div>
         </div>
-        <!-- row 2 -->
         <div class="panel" style="top:66.666%; left:0%;">
             <div class="panel-text"></div>
         </div>
@@ -91,33 +98,24 @@
 
         panels.forEach((panel, index) => {
             const text = panel.querySelector('.panel-text');
-
-            // 最初に日本語を表示
             text.textContent = originalTexts[index];
 
             panel.addEventListener('mouseenter', () => {
-                // テキストを英語に変更
                 text.textContent = englishtext[index];
-
-                // 音声再生
                 speak(englishtext[index]);
             });
 
             panel.addEventListener('mouseleave', () => {
-                // 日本語に戻す
                 text.textContent = originalTexts[index];
-
-                // 音声停止
                 window.speechSynthesis.cancel();
             });
         });
 
-        // 音声再生関数
         function speak(message) {
             const utterance = new SpeechSynthesisUtterance(message);
-            utterance.lang = 'en-US';  // 英語の発音
-            utterance.rate = 0.8;      // 少し遅めのスピードに設定
-            window.speechSynthesis.cancel(); // すでに話している音声があれば止める
+            utterance.lang = 'en-US';
+            utterance.rate = 0.8;
+            window.speechSynthesis.cancel();
             window.speechSynthesis.speak(utterance);
         }
     </script>
