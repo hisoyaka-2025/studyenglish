@@ -4,13 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ★追加 -->
-    <title>6コマ画像ホバー表示＋音声</title>
+    <title>英会話</title>
     <style>
-        #image-container {
-            position: relative;
+        #wrapper {
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
+        }
+
+        #image-container {
+            position: relative;
+            width: 100%;
         }
 
         #comic {
@@ -31,16 +35,11 @@
             bottom: 0;
             width: 100%;
             background: rgba(255, 255, 255, 0.8);
-            font-size: 3vw;
-            /* ★最適化された文字サイズ */
+            font-size: 3.5vw;
             color: #333;
             text-align: center;
             display: block;
             padding: 2px 0;
-        }
-
-        .panel-text {
-            font-size: 3.5vw;
         }
 
         @media (min-width: 600px) {
@@ -48,68 +47,156 @@
                 font-size: 18px;
             }
         }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .nav-buttons button {
+            font-size: 16px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+
+        /* 戻るボタンはやや左に寄せる */
+        .btn-back {
+            margin-right: 40px;
+            /* ← ここで「次へ」との間隔を広げる */
+        }
+
+        /* 次へボタン */
+        .btn-next {
+            margin-left: 0;
+        }
     </style>
 </head>
 
 <body>
-    <div id="image-container">
-        <img id="comic" src="english01.jpg" alt="english">
 
-        <div class="panel" style="top:0%; left:0%;">
-            <div class="panel-text"></div>
+    <div id="wrapper">
+        <div id="image-container">
+            <img id="comic" src="english01.jpg" alt="english">
+
+            <!-- 各パネル -->
+            <div class="panel" style="top:0%; left:0%;">
+                <div class="panel-text"></div>
+            </div>
+            <div class="panel" style="top:0%; left:50%;">
+                <div class="panel-text"></div>
+            </div>
+            <div class="panel" style="top:33.333%; left:0%;">
+                <div class="panel-text"></div>
+            </div>
+            <div class="panel" style="top:33.333%; left:50%;">
+                <div class="panel-text"></div>
+            </div>
+            <div class="panel" style="top:66.666%; left:0%;">
+                <div class="panel-text"></div>
+            </div>
+            <div class="panel" style="top:66.666%; left:50%;">
+                <div class="panel-text"></div>
+            </div>
         </div>
-        <div class="panel" style="top:0%; left:50%;">
-            <div class="panel-text"></div>
-        </div>
-        <div class="panel" style="top:33.333%; left:0%;">
-            <div class="panel-text"></div>
-        </div>
-        <div class="panel" style="top:33.333%; left:50%;">
-            <div class="panel-text"></div>
-        </div>
-        <div class="panel" style="top:66.666%; left:0%;">
-            <div class="panel-text"></div>
-        </div>
-        <div class="panel" style="top:66.666%; left:50%;">
-            <div class="panel-text"></div>
+        <!-- ▼ 画像の下に、右寄せでボタンを配置 -->
+
+        <div class="nav-buttons">
+            <button class="btn-back" onclick="goBack()">戻る</button>
+            <button class="btn-mext" onclick="goNext()">次へ</button>
         </div>
     </div>
-
     <script>
-        const englishtext = [
-            "This Crispy Part is delicious.",
-            "It's fun to draw.",
-            "I'm never giving in.",
-            "I'm not happy...",
-            "Hold on!!",
-            "I'm scared of water."
-        ];
+        // ▼ 1. テキストデータを画像番号に応じて管理
+        const englishTexts = {
+            1: [
+                "This Crispy Part is delicious.",
+                "It's fun to draw.",
+                "I'm never giving in.",
+                "I'm not happy...",
+                "Hold on!!",
+                "I'm scared of water."
+            ],
+            2: [
+                "I'm so glad you guys are back.",
+                "I'm nervous.",
+                "I got it.",
+                "Make it work!",
+                "Good for you!",
+                "I'll treasure it."
+            ],
+            3: [
+                "I'm so flattered.",
+                "I hope I'll win the sukiyaki prize!",
+                "I'll always root for you!",
+                "We'll be heading home for today.",
+                "I'm sorry, I misunderstood.",
+                "I have matching pajamas!"
+            ],
+            4: [
+                "I need to go there!",
+                "I feel like reading this one.",
+                "I'm getting scared again.",
+                "This is a golden opportunity!",
+                "So what?",
+                "Do you wanna know what it is?"
+            ],
+            5: [
+                "Are you okay?",
+                "Do they call \"Chashu\"･･･\"Buta\"?",
+                "You mean these are teatime snacks?",
+                "Oh,are you sure?",
+                "Where are you going?",
+                "What's that?"
+            ]
+        };
 
-        const originalTexts = [
-            "このサクサク、おいしい･･･",
-            "楽し･･･絵かくの",
-            "絶対･･･負けない",
-            "喜びがない～",
-            "待ってて!!",
-            "水怖いなー"
-        ];
+        const originalTexts = {
+            1: [
+                "このサクサク、おいしい･･･",
+                "楽し･･･絵かくの",
+                "絶対･･･負けない",
+                "喜びがない～",
+                "待ってて!!",
+                "水怖いなー"
+            ],
+            2: [
+                "みんな戻ってきてうれしい",
+                "緊張するっっ",
+                "わっ･･･わかったッッ！！",
+                "なんとかなれ",
+                "よかったね",
+                "大事にッ･･････するッ"
+            ],
+            3: [
+                "うっ･･･うれしすぎるッ･･･",
+                "すき焼き当たりますように！",
+                "ずっと応援するからね！！",
+                "今日はもう帰るネ～",
+                "カン違いしちゃって･･･スマン･･･",
+                "おそろいのパジャマ持ってるよ！"
+            ],
+            4: [
+                "行かなければ！！",
+                "これ読んでみたい･･･",
+                "またこわくなってきたー･･･",
+                "チャンス！！！",
+                "だからなんだってんだよ",
+                "それェ（気になる）？"
+            ],
+            5: [
+                "大丈夫？",
+                "チャーシューのこと･･････豚って呼ぶの？",
+                "「おやつ」･･･って事？",
+                "エーッ！！いいのォ！？",
+                "どこ行くのォ？",
+                "なんだそりゃ～？"
+            ]
+        };
 
         const panels = document.querySelectorAll('.panel');
-
-        panels.forEach((panel, index) => {
-            const text = panel.querySelector('.panel-text');
-            text.textContent = originalTexts[index];
-
-            panel.addEventListener('mouseenter', () => {
-                text.textContent = englishtext[index];
-                speak(englishtext[index]);
-            });
-
-            panel.addEventListener('mouseleave', () => {
-                text.textContent = originalTexts[index];
-                window.speechSynthesis.cancel();
-            });
-        });
+        const imageElement = document.getElementById("comic");
+        let currentIndex = 1;
 
         function speak(message) {
             const utterance = new SpeechSynthesisUtterance(message);
@@ -118,7 +205,70 @@
             window.speechSynthesis.cancel();
             window.speechSynthesis.speak(utterance);
         }
+
+        // ▼ テキスト切り替え関数（画像番号に応じて再設定）
+        function updateTexts(index) {
+            const enTexts = englishTexts[index];
+            const jpTexts = originalTexts[index];
+
+            if (!enTexts || !jpTexts) {
+                alert("テキストがありません");
+                return false;
+            }
+
+            panels.forEach((panel, i) => {
+                const text = panel.querySelector('.panel-text');
+                text.textContent = jpTexts[i];
+
+                panel.onmouseenter = () => {
+                    text.textContent = enTexts[i];
+                    speak(enTexts[i]);
+                };
+
+                panel.onmouseleave = () => {
+                    text.textContent = jpTexts[i];
+                    window.speechSynthesis.cancel();
+                };
+            });
+
+            return true;
+        }
+
+        // ▼ 画像とテキストを切り替える処理
+        function updateImage() {
+            const imagePath = `english${String(currentIndex).padStart(2, '0')}.jpg`;
+
+            const img = new Image();
+            img.onload = function () {
+                imageElement.src = imagePath;
+                updateTexts(currentIndex);
+            };
+            img.onerror = function () {
+                alert("画像はありません");
+                currentIndex--; // 失敗した分戻す
+            };
+            img.src = imagePath;
+        }
+
+        // ▼ 初期表示
+        updateTexts(currentIndex);
+
+        // ▼ 次へ・戻る
+        function goNext() {
+            currentIndex++;
+            updateImage();
+        }
+
+        function goBack() {
+            if (currentIndex > 1) {
+                currentIndex--;
+                updateImage();
+            } else {
+                alert("画像はありません");
+            }
+        }
     </script>
+
 </body>
 
 </html>
