@@ -103,54 +103,11 @@
 
         <div class="nav-buttons">
             <button class="btn-back" onclick="goBack()">戻る</button>
-            <button class="btn-mext" onclick="goNext()">次へ</button>
+            <button class="btn-next" onclick="goNext()">次へ</button>
         </div>
     </div>
     <script>
         // ▼ 1. テキストデータを画像番号に応じて管理
-        const englishTexts = {
-            1: [
-                "This Crispy Part is delicious.",
-                "It's fun to draw.",
-                "I'm never giving in.",
-                "I'm not happy...",
-                "Hold on!!",
-                "I'm scared of water."
-            ],
-            2: [
-                "I'm so glad you guys are back.",
-                "I'm nervous.",
-                "I got it.",
-                "Make it work!",
-                "Good for you!",
-                "I'll treasure it."
-            ],
-            3: [
-                "I'm so flattered.",
-                "I hope I'll win the sukiyaki prize!",
-                "I'll always root for you!",
-                "We'll be heading home for today.",
-                "I'm sorry, I misunderstood.",
-                "I have matching pajamas!"
-            ],
-            4: [
-                "I need to go there!",
-                "I feel like reading this one.",
-                "I'm getting scared again.",
-                "This is a golden opportunity!",
-                "So what?",
-                "Do you wanna know what it is?"
-            ],
-            5: [
-                "Are you okay?",
-                "Do they call \"Chashu\"･･･\"Buta\"?",
-                "You mean these are teatime snacks?",
-                "Oh,are you sure?",
-                "Where are you going?",
-                "What's that?"
-            ]
-        };
-
         const originalTexts = {
             1: [
                 "このサクサク、おいしい･･･",
@@ -194,15 +151,108 @@
             ]
         };
 
+        const englishTexts = {
+            1: [
+                "This Crispy Part is delicious.",
+                "It's fun to draw.",
+                "I'm never giving in.",
+                "I'm not happy...",
+                "Hold on!!",
+                "I'm scared of water."
+            ],
+            2: [
+                "I'm so glad you guys are back.",
+                "I'm nervous.",
+                "I got it.",
+                "Make it work!",
+                "Good for you!",
+                "I'll treasure it."
+            ],
+            3: [
+                "I'm so flattered.",
+                "I hope I'll win the sukiyaki prize!",
+                "I'll always root for you!",
+                "We'll be heading home for today.",
+                "I'm sorry, I misunderstood.",
+                "I have matching pajamas!"
+            ],
+            4: [
+                "I need to go there!",
+                "I feel like reading this one.",
+                "I'm getting scared again.",
+                "This is a golden opportunity!",
+                "So what?",
+                "Do you wanna know what it is?"
+            ],
+            5: [
+                "Are you okay?",
+                "Do they call \"Chashu\"･･･\"Buta\"?",
+                "You mean these are teatime snacks?",
+                "Oh,are you sure?",
+                "Where are you going?",
+                "What's that?"
+            ]
+        };
+        const englishSpeakTexts = {
+            1: [
+                "This Crispy Part is delicious",
+                "It's fun to draw",
+                "I'm never giving in",
+                "I'm not happy",
+                "Hold on",
+                "I'm scared of water"
+            ],
+            2: [
+                "I'm so glad you guys are back",
+                "I'm nervous",
+                "I got it",
+                "Make it work!",
+                "Good for you",
+                "I'll treasure it"
+            ],
+            3: [
+                "I'm so flattered",
+                "I hope I'll win the sukiyaki prize",
+                "I will always root for you",
+                "We'll be heading home for today",
+                "I'm sorry, I misunderstood",
+                "I have matching pajamas"
+            ],
+            4: [
+                "I need to go there",
+                "I feel like reading this one",
+                "I'm getting scared again",
+                "This is a golden opportunity",
+                "So what?",
+                "Do you wanna know what it is?"
+            ],
+            5: [
+                "Are you okay?",
+                "Do they call Chashu Buta?",
+                "You mean these are teatime snacks?",
+                "Oh,are you sure?",
+                "Where are you going?",
+                "What's that?"
+            ]
+        };
+
+
         const panels = document.querySelectorAll('.panel');
         const imageElement = document.getElementById("comic");
         let currentIndex = 1;
 
-        function speak(message) {
+        /*function speak(message) {
             const utterance = new SpeechSynthesisUtterance(message);
             utterance.lang = 'en-US';
             utterance.rate = 0.8;
             window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        }*/
+        function speak(message) {
+            const utterance = new SpeechSynthesisUtterance(message + '\u200B'); // ゼロ幅スペース追加
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.cancel(); // 一度キャンセルしてから
             window.speechSynthesis.speak(utterance);
         }
 
@@ -210,8 +260,9 @@
         function updateTexts(index) {
             const enTexts = englishTexts[index];
             const jpTexts = originalTexts[index];
+            const speakTexts = englishSpeakTexts[index];
 
-            if (!enTexts || !jpTexts) {
+            if (!enTexts || !jpTexts || !speakTexts) {
                 alert("テキストがありません");
                 return false;
             }
@@ -222,7 +273,7 @@
 
                 panel.onmouseenter = () => {
                     text.textContent = enTexts[i];
-                    speak(enTexts[i]);
+                    speak(speakTexts[i]);
                 };
 
                 panel.onmouseleave = () => {
@@ -251,8 +302,8 @@
         }
 
         // ▼ 初期表示
-        updateTexts(currentIndex);
-
+        //updateTexts(currentIndex);
+        updateImage()
         // ▼ 次へ・戻る
         function goNext() {
             currentIndex++;
